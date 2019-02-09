@@ -1,0 +1,24 @@
+{
+  "name": "spotifyplaybackstation",
+  "version": "1.0.0",
+  "description": "Spotify web playback application designed to store multiple tokens on server side (premium account only)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zessirb/spotifyplaybackstation.git"
+  },
+  "author": "zessirb",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zessirb/spotifyplaybackstation/issues"
+  },
+  "homepage": "https://github.com/zessirb/spotifyplaybackstation#readme",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "node-persist": "^3.0.4"
+  }
+}
