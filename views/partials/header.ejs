@@ -1,7 +1,23 @@
 <div class="top-bar">
     <div class="tob-bar-left">
-        <ul class="dropdown menu" data-dropdown-menu>
+        <ul class="menu">
             <li class="menu-text">Spotify Playback Station</li>
+        </ul>
+    </div>
+    <div class="tob-bar-right">
+        <ul class="dropdown menu" data-dropdown-menu>
+            <li>
+                <a href="#">Tokens</a>
+                <ul class="menu vertical">
+                    <% for (let t in tokens) {
+                        if (token === tokens[t]) { %>
+                            <li><strong><%= t %></strong></li></li>
+                        <% } else { %>
+                            <li><a><%= t %></a></li>
+                        <% }
+                    } %>
+                </ul>
+            </li>
         </ul>
     </div>
 </div>

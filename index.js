@@ -30,7 +30,8 @@ app.get('/', (req, res) => {
 
 app.get('/player', async (req, res) => {
     res.render('pages/player', {
-        token: getToken()
+        tokens: await getTokens(),
+        token: await getToken()
     })
 });
 
