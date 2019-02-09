@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/zessirb/spotifyplaybackstation#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
+    "foundation-sites": "^6.5.3",
     "node-persist": "^3.0.4"
   }
 }

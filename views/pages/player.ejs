@@ -2,12 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Spotify Playback Station</title>
+    <link rel="stylesheet" href="node_modules/foundation-sites/dist/css/foundation.css"/>
 </head>
 <body>
-    <span class="spotify-key"><%= token %></span>
+    <span class="spotify-key hide"><%= token %></span>
+
+    <% include ../partials/header.ejs %>
 
     <script src="https://sdk.scdn.co/spotify-player.js"></script>
-    <script src="javascript/player.js"></script>
+    <script src="public/javascript/player.js"></script>
 </body>
 </html>

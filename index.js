@@ -1,99 +1,87 @@
 const express = require('express');
-const app = express();
+const bodyParser = require('body-parser');
 const storage = require('node-persist');
+const path = require ('path');
 
-var path = require ('path');
+const app = express();
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.text({ type: 'text/plain' }));
+app.use('/public', express.static(path.join(__dirname, '/public')));
+app.use('/node_modules', express.static(path.join(__dirname, '/node_modules')));
+
+async function loadStorage() {
+    await storage.init({
+        dir: 'tokens',
+        stringify: JSON.stringify,
+        parse: JSON.parse,
+        encoding: 'utf8',
+        logging: false,
+        ttl: false,
+        forgiveParseErrors: false
+    });
+}
 
 app.get('/', (req, res) => {
     res.render('pages/index');
 });
 
 app.get('/player', async (req, res) => {
-    await storage.init({
-        dir: 'tokens',
-        stringify: JSON.stringify,
-        parse: JSON.parse,
-        encoding: 'utf8',
-        logging: false,
-        ttl: false,
-        forgiveParseErrors: false
-    });
-    let currentToken = await storage.getItem('token');
     res.render('pages/player', {
-        token: currentToken
+        token: getToken()
     })
 });
 
+app.get('/token', async (req, res) => {
+    let token = await getToken();
+    res.send(token);
+});
+
+async function getToken() {
+    await loadStorage();
+    return await storage.getItem('token');
+}
+
+app.post('/token', async (req, res) => {
+    await loadStorage();
+    await storage.setItem('token', req.body);
+    res.send(req.body);
+});
+
 app.get('/tokens', async (req, res) => {
-    await storage.init({
-        dir: 'tokens',
-        stringify: JSON.stringify,
-        parse: JSON.parse,
-        encoding: 'utf8',
-        logging: false,
-        ttl: false,
-        forgiveParseErrors: false
-    });
-    let tokens = [];
-    await storage.forEach(async function(data) {
-        if (data.key !== 'token') {
-            tokens.append(data.value);
-        }
-    });
+    let tokens = await getTokens();
     res.send(tokens);
 });
 
-app.post('/tokens/:token', async (req, res) => {
-    await storage.init({
-        dir: 'tokens',
-        stringify: JSON.stringify,
-        parse: JSON.parse,
-        encoding: 'utf8',
-        logging: false,
-        ttl: false,
-        forgiveParseErrors: false
+async function getTokens() {
+    await loadStorage();
+    let tokens = {};
+    await storage.forEach(async function(data) {
+        if (data.key !== 'token') {
+            tokens[data.key] = data.value;
+        }
     });
-    let length = await storage.length();
-    await storage.setItem(req.params['token'], req.params['token']);
-    res.send(req.params['token']);
+    return tokens;
+}
+
+app.post('/tokens/:tokenKey', async (req, res) => {
+    await loadStorage();
+    await storage.setItem(req.params['tokenKey'], req.body);
+    res.send(req.params['tokenKey']);
 });
 
-app.delete('/tokens/:token', async (req, res) => {
-    await storage.init({
-        dir: 'tokens',
-        stringify: JSON.stringify,
-        parse: JSON.parse,
-        encoding: 'utf8',
-        logging: false,
-        ttl: false,
-        forgiveParseErrors: false
-    });
+app.delete('/tokens/:tokenKey', async (req, res) => {
+    await loadStorage();
     let removed = false;
     await storage.forEach(async function(data) {
-        if (data.value === req.params['token']) {
+        if (data.key === req.params['tokenKey']) {
            await storage.removeItem(data.key);
            removed = true;
         }
     });
-    res.send(removed ? req.params['token'] : 'null');
-});
-
-app.post('/token/:token', async (req, res) => {
-    await storage.init({
-        dir: 'tokens',
-        stringify: JSON.stringify,
-        parse: JSON.parse,
-        encoding: 'utf8',
-        logging: false,
-        ttl: false,
-        forgiveParseErrors: false
-    });
-    await storage.setItem('token', req.params['token']);
-    res.send(req.params['token']);
+    res.send(removed ? req.params['tokenKey'] : 'null');
 });
 
 app.listen(8000, () => {
