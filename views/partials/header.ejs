@@ -21,7 +21,7 @@
                             </li>
                         <% } else { %>
                             <li>
-                                <a href="localhost:8000/player?access_token=<%= tokens[t] %>">
+                                <a href="/player?access_token=<%= tokens[t] %>">
                                     <%= t %>
                                     <button class="close-button" aria-label="Close alert" type="button" data-close onclick="deleteToken(`<%= t %>`);">
                                         <span aria-hidden="true">&times;</span>
