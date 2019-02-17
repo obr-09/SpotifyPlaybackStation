@@ -17,7 +17,7 @@ spotifyProfileHttp.send();
 spotifyProfileHttp.onreadystatechange=(e)=>{
     if (spotifyProfileHttp.response) {
         const displayName = JSON.parse(spotifyProfileHttp.response).display_name;
-        window.location.replace('/player?access_token=' + hash.access_token + '&profile=' + displayName);
+        window.location.replace('http://couvercle:8000/player?access_token=' + hash.access_token + '&profile=' + displayName);
     }
 };
 
