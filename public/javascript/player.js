@@ -12,7 +12,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 
     // Error handling
     player.addListener('initialization_error', ({ message }) => { console.error(message); });
-    player.addListener('authentication_error', ({ message }) => { console.error(message); });
+    player.addListener('authentication_error', ({ message }) => { refresh(); });
     player.addListener('account_error', ({ message }) => { console.error(message); });
     player.addListener('playback_error', ({ message }) => { console.error(message); });
 
@@ -32,3 +32,24 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     // Connect to the player!
     player.connect();
 };
+
+function refresh() {
+    location.reload();
+}
+
+function deleteToken(tokenName) {
+    console.log("delete token : " + tokenName);
+
+}
+
+function playPause() {
+    console.log("playPause");
+}
+
+function goPrevious() {
+    console.log("goPrevious");
+}
+
+function goNext() {
+    console.log("goNext");
+}

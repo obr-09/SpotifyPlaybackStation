@@ -64,6 +64,16 @@ async function addMainToken(token) {
     await storage.setItem('token', token);
 }
 
+app.delete('/token', async (req, res) => {
+    await removeMainToken();
+    res.send('Main token removed');
+});
+
+async function removeMainToken() {
+    await loadStorage();
+    await storage.setItem('token', '');
+}
+
 app.get('/tokens', async (req, res) => {
     let tokens = await getTokens();
     res.send(tokens);
