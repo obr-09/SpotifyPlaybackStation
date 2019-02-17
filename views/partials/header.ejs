@@ -11,11 +11,12 @@
                 <ul class="menu vertical">
                     <% for (let t in tokens) {
                         if (token === tokens[t]) { %>
-                            <li><strong><%= t %></strong></li></li>
+                            <li class="is-active"><a><%= t %> <i class="fi fi-trash"></i></a></li>
                         <% } else { %>
-                            <li><a><%= t %></a></li>
+                            <li><a><%= t %> <i class="fi fi-trash"></i></a></li>
                         <% }
                     } %>
+                    <li><a href="https://accounts.spotify.com/authorize?response_type=token&client_id=c80454417d9147f69e21480920207269&scope=streaming user-read-birthdate user-read-email user-read-private&redirect_uri=http://localhost:8000/addToken">Add token</a></li>
                 </ul>
             </li>
         </ul>

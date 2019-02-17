@@ -18,21 +18,30 @@ async function loadStorage() {
         stringify: JSON.stringify,
         parse: JSON.parse,
         encoding: 'utf8',
+        expiredInterval: 60 * 60 * 1000,
         logging: false,
         ttl: false,
         forgiveParseErrors: false
     });
 }
 
-app.get('/', (req, res) => {
-    res.render('pages/index');
-});
-
-app.get('/player', async (req, res) => {
+app.get(['/', '/player'], async (req, res) => {
+    let token = req.query['access_token'];
+    let profile = req.query['profile'];
+    if (token) {
+        if (profile) {
+            await addToken(profile, token);
+        }
+        await addMainToken(token);
+    }
     res.render('pages/player', {
         tokens: await getTokens(),
         token: await getToken()
     })
+});
+
+app.get('/addToken', (req, res) => {
+    res.render('pages/addToken');
 });
 
 app.get('/token', async (req, res) => {
@@ -46,10 +55,14 @@ async function getToken() {
 }
 
 app.post('/token', async (req, res) => {
-    await loadStorage();
-    await storage.setItem('token', req.body);
+    await addMainToken(req.body);
     res.send(req.body);
 });
+
+async function addMainToken(token) {
+    await loadStorage();
+    await storage.setItem('token', token);
+}
 
 app.get('/tokens', async (req, res) => {
     let tokens = await getTokens();
@@ -68,10 +81,14 @@ async function getTokens() {
 }
 
 app.post('/tokens/:tokenKey', async (req, res) => {
-    await loadStorage();
-    await storage.setItem(req.params['tokenKey'], req.body);
+    await addToken(req.params['tokenKey'], req.body);
     res.send(req.params['tokenKey']);
 });
+
+async function addToken(tokenKey, tokenValue) {
+    await loadStorage();
+    await storage.setItem(tokenKey, tokenValue);
+}
 
 app.delete('/tokens/:tokenKey', async (req, res) => {
     await loadStorage();
